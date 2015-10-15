@@ -33,7 +33,7 @@ const JS_LOADER = {
   include: [
     path.resolve(__dirname, '../src'),
   ],
-  loader: 'babel-loader',
+  loader: 'babel',
 };
 
 //
@@ -140,7 +140,7 @@ const appConfig = merge({}, config, {
         query: {
           // Wraps all React components into arbitrary transforms
           // https://github.com/gaearon/babel-plugin-react-transform
-          plugins: ['react-transform'],
+          plugins: ['babel-relay-plugin-loader', 'react-transform'],
           extra: {
             'react-transform': {
               transforms: [

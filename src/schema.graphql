@@ -1,0 +1,13 @@
+type Example implements Node {
+  id: ID!
+  text: String
+}
+
+interface Node {
+  id: ID!
+}
+
+type Query {
+  node(id: ID!): Node
+  example: Example
+}

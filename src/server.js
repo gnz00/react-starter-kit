@@ -8,6 +8,10 @@ import ReactDOM from 'react-dom/server';
 import Router from './routes';
 import Html from './components/Html';
 
+// Relay
+import Schema from './schema';
+import graphQLHTTP from 'express-graphql';
+
 const server = global.server = express();
 
 server.set('port', (process.env.PORT || 5000));
@@ -17,7 +21,7 @@ server.use(express.static(path.join(__dirname, 'public')));
 // Register API middleware
 // -----------------------------------------------------------------------------
 server.use('/api/content', require('./api/content'));
-
+server.use('/graphql', graphQLHTTP({ schema: Schema, pretty: true }));
 //
 // Register server-side rendering middleware
 // -----------------------------------------------------------------------------

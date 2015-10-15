@@ -11,6 +11,23 @@ import RegisterPage from './components/RegisterPage';
 import NotFoundPage from './components/NotFoundPage';
 import ErrorPage from './components/ErrorPage';
 
+import ExampleRoot from './roots/ExampleRoot';
+import Application from './containers/App';
+import { canUseDOM } from 'fbjs/lib/ExecutionEnvironment';
+
+if ( canUseDOM ) {
+  let Relay = require('react-relay');
+  class Root extends React.Component {
+    render() {
+      return (
+        <Relay.RootContainer
+          Component={ Application }
+          route={ new ExampleRoot() } />
+      );
+    }
+  }
+}
+
 const router = new Router(on => {
   on('*', async (state, next) => {
     const component = await next();

@@ -31,7 +31,13 @@ if ( canUseDOM ) {
 const router = new Router(on => {
   on('*', async (state, next) => {
     const component = await next();
-    return component && <App context={state.context}>{component}</App>;
+
+    console.log(typeof window);
+    if (canUseDOM) {
+      return component && <Root context={state.context}>{component}</Root>;
+    } else {
+      return component && <App context={state.context}>{component}</App>;
+    }
   });
 
   on('/contact', async () => <ContactPage />);

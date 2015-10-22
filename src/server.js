@@ -22,6 +22,7 @@ server.use(express.static(path.join(__dirname, 'public')));
 // -----------------------------------------------------------------------------
 server.use('/api/content', require('./api/content'));
 server.use('/graphql', graphQLHTTP({ schema: Schema, pretty: true }));
+
 //
 // Register server-side rendering middleware
 // -----------------------------------------------------------------------------

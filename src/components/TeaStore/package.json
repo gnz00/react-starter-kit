@@ -1,0 +1,6 @@
+{
+  "name": "TeaStore",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./TeaStore.js"
+}

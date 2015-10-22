@@ -48,7 +48,7 @@ export default task('schema', async () => {
       path.join(__dirname, `${schemaPath}.graphql`),
       printSchema(schema)
     );
-  }
+  }();
 
   if (global.WATCH) {
     watch('src/schema.js').then(watcher => {

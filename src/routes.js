@@ -10,43 +10,59 @@ import LoginPage from './components/LoginPage';
 import RegisterPage from './components/RegisterPage';
 import NotFoundPage from './components/NotFoundPage';
 import ErrorPage from './components/ErrorPage';
+import TeaStore from './components/TeaStore';
+import Tea from './components/Tea';
 
-import ApplicatonRoot from './roots/ExampleRoot';
-import Application from './containers/App';
+import Schema from './schema';
+import {graphql} from 'graphql';
+
 import { canUseDOM } from 'fbjs/lib/ExecutionEnvironment';
-let Root = undefined;
-
-if ( canUseDOM ) {
-  let Relay = require('react-relay');
-  Root = class Root extends React.Component {
-    render() {
-      return (
-        <Relay.RootContainer
-          Component={Application}
-          route={new ApplicatonRoot()}
-        >
-        {this.props.children}
-        </Relay.RootContainer>
-      );
-    }
-  }
-}
 
 const router = new Router(on => {
   on('*', async (state, next) => {
     const component = await next();
-    if (canUseDOM) {
-      return component && <Root context={state.context}>{component}</Root>;
-    } else {
-      return component && <App context={state.context}></App>;
-    }
+    return component && <App context={state.context}>{component}</App>;
   });
 
   on('/contact', async () => <ContactPage />);
 
-  on('/login', async () => <LoginPage />);
+  on('/teas', async () => {
+    if (canUseDOM) {
+      const Relay = require('react-relay');
+
+      let TeaContainer = Relay.createContainer(TeaStore, {
+        fragments: {
+          store: () => Relay.QL`
+            fragment on Store {
+              teas { ${Tea.getFragment('tea')} },
+            }
+          `,
+        },
+      });
+
+      class TeaHomeRoute extends Relay.Route {
+        static routeName = 'Home';
+        static queries = {
+          store: (Component) => Relay.QL`
+            query TeaStoreQuery {
+              store { ${Component.getFragment('store')} },
+            }
+          `,
+        };
+      }
+
+      return <Relay.RootContainer
+        Component={TeaContainer}
+        route={new TeaHomeRoute()}
+      />
+    } else {
+      let data = await graphql(Schema, '{ store { teas { name, steepingTime } } }');
+      return <TeaStore store={data.data.store}/>;
+    }
+  });
 
   on('/register', async () => <RegisterPage />);
+  on('/login', async () => <LoginPage />);
 
   on('*', async (state) => {
     const content = await http.get(`/api/content?path=${state.path}`);

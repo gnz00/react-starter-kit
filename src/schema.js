@@ -1,62 +1,50 @@
 import {
-  GraphQLObjectType,
   GraphQLInt,
+  GraphQLList,
+  GraphQLObjectType,
+  GraphQLSchema,
   GraphQLString,
-  GraphQLSchema
 } from 'graphql';
 
-import {
-  fromGlobalId,
-  globalIdField,
-  nodeDefinitions
-} from 'graphql-relay';
-
-const example = {
-  id: 1,
-  text: 'Hello World'
+const STORE = {
+  teas: [
+    {name: 'Earl Grey Blue Star', steepingTime: 5},
+    {name: 'Milk Oolong', steepingTime: 3},
+    {name: 'Gunpowder Golden Temple', steepingTime: 3},
+    {name: 'Assam Hatimara', steepingTime: 5},
+    {name: 'Bancha', steepingTime: 2},
+    {name: 'Ceylon New Vithanakande', steepingTime: 5},
+    {name: 'Golden Tip Yunnan', steepingTime: 5},
+    {name: 'Jasmine Phoenix Pearls', steepingTime: 3},
+    {name: 'Kenya Milima', steepingTime: 5},
+    {name: 'Pu Erh First Grade', steepingTime: 4},
+    {name: 'Sencha Makoto', steepingTime: 2},
+  ],
 };
 
-/**
- * The first argument defines the way to resolve an ID to its object.
- * The second argument defines the way to resolve a node object to its GraphQL type.
- */
-var { nodeInterface, nodeField } = nodeDefinitions(
-  (globalId) => {
-    let { id, type } = fromGlobalId(globalId);
-    if (type === 'Example')
-      return example;
-    return null;
-  },
-  (obj) => {
-    return exampleType;
-  }
-);
-
-var exampleType = new GraphQLObjectType({
-  name: 'Example',
+var TeaType = new GraphQLObjectType({
+  name: 'Tea',
   fields: () => ({
-    id: globalIdField('Example'),
-    text: {
-      type: GraphQLString,
-      description: 'Hello World'
-    }
+    name: {type: GraphQLString},
+    steepingTime: {type: GraphQLInt},
   }),
-  interfaces: [ nodeInterface ]
 });
 
-var queryType = new GraphQLObjectType({
-  name: 'Query',
+var StoreType = new GraphQLObjectType({
+  name: 'Store',
   fields: () => ({
-    node: nodeField,
-    example: {
-      type: exampleType,
-      resolve: () => example
-    }
-  })
+    teas: {type: new GraphQLList(TeaType)},
+  }),
 });
 
-var Schema = new GraphQLSchema({
-  query: queryType
+export default new GraphQLSchema({
+  query: new GraphQLObjectType({
+    name: 'Query',
+    fields: () => ({
+      store: {
+        type: StoreType,
+        resolve: () => STORE,
+      },
+    }),
+  }),
 });
-
-export default Schema;

@@ -8,13 +8,22 @@ import Header from '../Header';
 import Feedback from '../Feedback';
 import Footer from '../Footer';
 
+@withContext
+@withStyles(styles)
 class App extends Component {
 
-  render() {
+  static propTypes = {
+    children: PropTypes.element.isRequired,
+    error: PropTypes.object,
+  };
 
+  render() {
     return !this.props.error ? (
-      <div className="App">
-        <div>{this.props.example.text}</div>
+      <div>
+        <Header />
+        {this.props.children}
+        <Feedback />
+        <Footer />
       </div>
     ) : this.props.children;
   }

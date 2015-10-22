@@ -14,7 +14,6 @@
 import fs from 'fs';
 import path from 'path';
 import schema from "../src/schema";
-import task from './lib/task';
 import watch from './lib/watch';
 import { graphql } from 'graphql';
 import { introspectionQuery, printSchema } from 'graphql/utilities';
@@ -24,9 +23,9 @@ let schemaPath = '../src/schema';
  * Copies static files such as robots.txt, favicon.ico to the
  * output (build) folder.
  */
-export default task('schema', async () => {
+export default async function generateSchema() {
 
-  let generateSchema = function() {
+  let generate = function() {
     // Save JSON of full schema introspection for Babel Relay Plugin to use
     async () => {
       var result = await (graphql(schema, introspectionQuery));
@@ -53,8 +52,8 @@ export default task('schema', async () => {
   if (global.WATCH) {
     watch('src/schema.js').then(watcher => {
       watcher.on('changed', () => {
-        generateSchema();
+        generate();
       });
     });
   }
-});
+};

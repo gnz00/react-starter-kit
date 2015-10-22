@@ -15,11 +15,11 @@ class TeaStore extends React.Component {
       <div className="TeaStore-container">
         <h1>{title}</h1>
         <ul className="TeaStore-TeaList">
-          {
-            this.props.store.teas.map((tea, index) => {
-              return <Tea key={`${tea}-${index}`} tea={tea} />;
-            })
-          }
+        {
+          this.props.store.teas.map((tea, index) => {
+            return <Tea key={`${tea}-${index}`} tea={tea} />;
+          })
+        }
         </ul>;
       </div>
     </div>

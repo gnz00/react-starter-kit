@@ -26,6 +26,7 @@ const router = new Router(on => {
 
   on('/contact', async () => <ContactPage />);
 
+  // Relay example. Relay isn't fully isomorphic yet, so..
   on('/teas', async () => {
     if (canUseDOM) {
       const Relay = require('react-relay');
@@ -51,14 +52,16 @@ const router = new Router(on => {
         };
       }
 
+      // Client rendering...
       return <Relay.RootContainer
         Component={TeaContainer}
         route={new TeaHomeRoute()}
       />
-    } else {
-      let data = await graphql(Schema, '{ store { teas { name, steepingTime } } }');
-      return <TeaStore store={data.data.store}/>;
     }
+
+    // Server rendering...
+    let data = await graphql(Schema, '{ store { teas { name, steepingTime } } }');
+    return <TeaStore store={data.data.store}/>;
   });
 
   on('/register', async () => <RegisterPage />);

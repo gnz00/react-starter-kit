@@ -5,7 +5,7 @@ let container = {};
 
 if ( canUseDOM ) {
   let Relay = require('react-relay');
-  container = Relay.createContainer(Application, {
+  container = Relay.createContainer(App, {
     fragments: {
       example: () => Relay.QL`
         fragment on Example {

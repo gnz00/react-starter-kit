@@ -11,18 +11,22 @@ import RegisterPage from './components/RegisterPage';
 import NotFoundPage from './components/NotFoundPage';
 import ErrorPage from './components/ErrorPage';
 
-import ExampleRoot from './roots/ExampleRoot';
+import ApplicatonRoot from './roots/ExampleRoot';
 import Application from './containers/App';
 import { canUseDOM } from 'fbjs/lib/ExecutionEnvironment';
+let Root = undefined;
 
 if ( canUseDOM ) {
   let Relay = require('react-relay');
-  class Root extends React.Component {
+  Root = class Root extends React.Component {
     render() {
       return (
         <Relay.RootContainer
-          Component={ Application }
-          route={ new ExampleRoot() } />
+          Component={Application}
+          route={new ApplicatonRoot()}
+        >
+        {this.props.children}
+        </Relay.RootContainer>
       );
     }
   }
@@ -31,12 +35,10 @@ if ( canUseDOM ) {
 const router = new Router(on => {
   on('*', async (state, next) => {
     const component = await next();
-
-    console.log(typeof window);
     if (canUseDOM) {
       return component && <Root context={state.context}>{component}</Root>;
     } else {
-      return component && <App context={state.context}>{component}</App>;
+      return component && <App context={state.context}></App>;
     }
   });
 
